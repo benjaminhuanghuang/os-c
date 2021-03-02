@@ -1,15 +1,19 @@
+GCCPARAMS = -m64
+
+objects = mb_boot_stub.o boot.o kernel.o
+
 env:
 	# escape $ to $$ in Makefile
 	docker run --rm -it -v "$$PWD":/root/env myos-buildenv
 
-stub.o:
-	nasm  -f elf64 ./kernel/mb_boot_stub.asm -o ./kernel/stub.o
+%.o : kernel/%.c
+	gcc $(GCCPARAMS) -c -o kernel/$@ $<
 
-boot.o:
-	nasm -f elf64 ./kernel/boot.asm -o ./kernel/boot.o
+%.o : kernel/%.asm
+	nasm -f elf64 kernel/$*.asm -o kernel/$*.o
 
-kernel.bin: stub.o boot.o
-	ld -n -o ./kernel/kernel.bin -T ./kernel/linker.ld ./kernel/stub.o ./kernel/boot.o
+kernel.bin: kernel/linker.ld kernel/$(objects)
+	ld -n -T kernel/linker.ld -o kernel/kernel.bin kernel/*.o
 
 iso: kernel.bin
 	cp kernel/kernel.bin iso/boot/kernel.bin && \
@@ -19,4 +23,5 @@ run:
 	qemu-system-x86_64 -cdrom os.iso
 
 clean:
-	rm -rf *.bin
+	rm -rf kernel/*.bin
+	rm -rf kernel/*.o
