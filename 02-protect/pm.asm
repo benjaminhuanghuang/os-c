@@ -1,7 +1,7 @@
-DA_32 EQU	4000h;32位
-DA_C EQU 98h; 只执行代码段的属性
-DA_DRW	EQU 92h;可读写的数据段
-DA_DRWA EQU 93h;存在的已访问的可读写的
+DA_32   EQU	4000h ;32位
+DA_C    EQU 98h   ; 只执行代码段的属性
+DA_DRW	EQU 92h   ;可读写的数据段
+DA_DRWA EQU 93h   ;存在的已访问的可读写的
 
 %macro Descriptor 3
 	dw %2 & 0FFFFh	;段界限1 （2字节）
@@ -12,29 +12,30 @@ DA_DRWA EQU 93h;存在的已访问的可读写的
 %endmacro
 
 
-org 0100h 	;因为我们dos下调试程序，那么0100是可用区域
-	jmp PM_BEGIN	;跳入到标号为PM_BEGIN的代码段开始推进
+org 0100h 	  ;因为我们dos下调试程序，那么0100是可用区域
+jmp PM_BEGIN	;跳入到标号为PM_BEGIN的代码段开始推进
 	
 	
 [SECTION .gdt]
 ;GDT
-;								段基址，段界限，属性
-PM_GDT:				Descriptor		0,		0,		0
-PM_DESC_CODE32:	Descriptor		0,		SegCode32Len -1,DA_C+DA_32
-PM_DESC_DATA:		Descriptor		0,		DATALen-1, DA_DRW	
-PM_DESC_STACK:		Descriptor		0,		TopOfStack,	DA_DRWA+DA_32
-PM_DESC_TEST:		Descriptor		0200000h,0ffffh,	DA_DRW
-PM_DESC_VIDEO:		Descriptor		0B8000h,	0ffffh, DA_DRW
+;								             段基址，      段界限，         属性
+PM_GDT:				  Descriptor		0,		      0,		          0
+PM_DESC_CODE32:	Descriptor		0,		     SegCode32Len -1, DA_C+DA_32
+PM_DESC_DATA:		Descriptor		0,		     DATALen-1,       DA_DRW	
+PM_DESC_STACK:	Descriptor		0,		     TopOfStack,	    DA_DRWA+DA_32
+PM_DESC_TEST:		Descriptor		0200000h,  0ffffh,	        DA_DRW
+PM_DESC_VIDEO:	Descriptor		0B8000h,	 0ffffh,          DA_DRW
 ;end of definiton gdt
+
 GdtLen equ $ - PM_GDT
 GdtPtr dw GdtLen - 1
-dd  0 ; GDT 基地址
+dd  0 ; GDT 基地址   
 
 ;GDT 选择子
 SelectoerCode32	equ PM_DESC_CODE32 - PM_GDT	
-SelectoerDATA	equ PM_DESC_DATA - PM_GDT
+SelectoerDATA	  equ PM_DESC_DATA - PM_GDT
 SelectoerSTACK	equ PM_DESC_STACK - PM_GDT	
-SelectoerTEST	equ PM_DESC_TEST - PM_GDT
+SelectoerTEST	  equ PM_DESC_TEST - PM_GDT
 SelectoerVideo	equ PM_DESC_VIDEO - PM_GDT				
 ;END of [SECTION .gdt]
 
