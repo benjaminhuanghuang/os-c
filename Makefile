@@ -6,17 +6,12 @@ env:
 	# escape $ to $$ in Makefile
 	docker run --rm -it -v "$$PWD":/root/env myos-buildenv
 
-%.o : kernel/%.c
-	gcc $(GCCPARAMS) -c -o kernel/$@ $<
-
-%.o : kernel/%.asm
-	nasm -f elf64 kernel/$*.asm -o kernel/$*.o
-
-kernel.bin: kernel/linker.ld kernel/$(objects)
-	ld -n -T kernel/linker.ld -o kernel/kernel.bin kernel/*.o
+kernel.bin: 
+	cd kernel &&\
+	make
 
 iso: kernel.bin
-	cp kernel/kernel.bin iso/boot/kernel.bin && \
+	cp kernel/kernel.bin iso/boot/kernel.bin &&\
 	grub-mkrescue /usr/lib/grub/i386-pc -o os.iso iso
 
 run:
