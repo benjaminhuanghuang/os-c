@@ -1,9 +1,9 @@
-GCCPARAMS = -m64
+GCCPARAMS = -ffreestanding -mno-red-zone -m64 -c
 
 objects = mb_boot_stub.o boot.o kernel.o
 
 %.o : %.c
-	gcc $(GCCPARAMS) -c -o $@ $<
+	x86_64-elf-gcc $(GCCPARAMS) -o $@ $<
 
 %.o : %.asm
 	nasm -f elf64 $*.asm -o $*.o

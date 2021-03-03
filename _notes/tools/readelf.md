@@ -1,0 +1,4 @@
+
+
+readelf -h kernel.bin
+
