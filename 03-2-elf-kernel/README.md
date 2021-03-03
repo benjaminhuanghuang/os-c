@@ -40,8 +40,9 @@ BIOS 加载 mbr到 0x7c00并执行， mbr 加载 loader 某个可用的内存地
 ```
 可以看到 .text的地址为0x1500
 
-但是 此时的 `kernel.bin`
+但是 此时的 kernel.bin 包含一些elf信息，对于kernel来说是无用的
 
-objcopy用于将object的部分获全部内容拷贝到另一个object，从而转换elf文件为bin文件。
+objcopy用于将代码部分拷贝到另一个object，从而转换elf文件为bin文件。
 ```
+  objcopy -O binary kernel.bin kernal.raw.bin
 ```
