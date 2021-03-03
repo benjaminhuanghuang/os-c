@@ -1,14 +1,14 @@
 
 
 os:
-	nasm hello.asm -o boot.bin
+	nasm int10.asm -o boot.bin
 
-# Create vhd using win dispart
-# write boot.bin to first partion of the vhd
 install:
-	dd if=boot.bin of=f:\os.vhd bs=512 count=1
+	dd if=/dev/zero of=boot.img bs=512 count=2880
+	dd if=boot.bin of=boot.img bs=512 count=1 conv=notrunc
 
-run:
-	# Load vhd in virtual box
+run: install
+	# Load vhd in virtual machine
+	qemu-system-x86_64 -fda boot.img -boot a
 
 
