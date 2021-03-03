@@ -3,7 +3,7 @@ PROGRAM_SPACE equ 0x7a00
 
 ReadDisk:
   mov ah, 0x02
-  mov bx, 0x7a00       ; [ES:BX] to put data
+  mov bx, PROGRAM_SPACE       ; [ES:BX] to put data
   mov al, 4            ; read 4 sectors
   mov dl, 0x0          ; [BOOT_DISK]          ; read which disk
   mov ch, 0x0          ; cylinder

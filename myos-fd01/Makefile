@@ -17,3 +17,5 @@ run: install
 clean:
 	rm -rf *.bin
 	rm -rf *.o
+	rm -rf *.img
+	

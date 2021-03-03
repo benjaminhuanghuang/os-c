@@ -1,13 +1,19 @@
 [org 0x7a00]
 
-mov bx, ExtendSuccess      
-call PrintString
-
-jmp $
+jmp EnterProtectedMode
 
 %include "print.asm"
 
-ExtendSuccess:
-  db "ExtendSuccess", 0
+EnterProtectedMode:
+  cli
 
-times 2048 - ($-$$)	db 0
+
+  jmp $
+
+EableA20:
+  in al, 0x92
+  or al, 2
+  out 0x92, al
+  ret
+  
+times 2048 - ($-$$)	db 0  
