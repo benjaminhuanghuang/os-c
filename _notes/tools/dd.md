@@ -7,4 +7,5 @@ Create floppy disk
 Write MBR
 ```
 	dd if=boot.bin of=boot.img bs=512 count=1 conv=notrunc
+	dd if=boot.bin of=boot.img bs=512 count=1 seek=1
 ```
